@@ -1,0 +1,22 @@
+{
+  "name": "online_judge",
+  "version": "1.0.0",
+  "description": "online judge for programming",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mahendra49/online_judge.git"
+  },
+  "author": "mahendra suthar",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mahendra49/online_judge/issues"
+  },
+  "homepage": "https://github.com/mahendra49/online_judge#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
