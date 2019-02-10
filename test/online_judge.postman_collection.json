@@ -1,0 +1,225 @@
+{
+	"info": {
+		"_postman_id": "e5e50c83-98c2-458b-8ad0-0bc7bfdaf064",
+		"name": "online_judge",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					},
+					{
+						"key": "user",
+						"value": "mahendra",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "password",
+						"value": "holla",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "user",
+							"value": "mahendra",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "holla",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/login",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"login"
+					],
+					"query": [
+						{
+							"key": "user",
+							"value": "mahendra",
+							"disabled": true
+						},
+						{
+							"key": "password",
+							"value": "holla",
+							"disabled": true
+						}
+					]
+				},
+				"description": "user login"
+			},
+			"response": []
+		},
+		{
+			"name": "register",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "user",
+							"value": "mahendra",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "holla",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "mahendrasuthar02@gmail.com",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/register",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"register"
+					]
+				},
+				"description": "to add a new user"
+			},
+			"response": []
+		},
+		{
+			"name": "submit-problem",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "owner",
+							"value": "mahendra",
+							"type": "text"
+						},
+						{
+							"key": "problemName",
+							"value": "MAHI",
+							"type": "text"
+						},
+						{
+							"key": "problemId",
+							"value": "holla",
+							"type": "text"
+						},
+						{
+							"key": "statement",
+							"value": "var Blog = mongoose.model(\"Blog\", blogSchema);\n\n// restful routes\napp.get(\"/\", function(req, res) {\n    res.redirect(\"/blogs\");\n});\n\n//index route\napp.get(\"/blogs\", function(req, res) {\n\n    Blog.find({}, function(err, blogs) {\n        if (err) {\n            console.log(\"error\");\n        }\n        else {\n            res.render(\"index\", { blogs: blogs });\n        }\n    });\n});",
+							"type": "text"
+						},
+						{
+							"key": "input",
+							"value": "sasasasasasasasasasasasasasasasa",
+							"type": "text"
+						},
+						{
+							"key": "output",
+							"value": "snaskas agsgayitgyaitgssasausyugaugsyasuygauigsuiasa",
+							"type": "text"
+						},
+						{
+							"key": "sampleinput",
+							"value": "25256678 5 66 5 6 56 5 6",
+							"type": "text"
+						},
+						{
+							"key": "sampleoutput",
+							"value": "2 2 5 5 5 6 6 56 6",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/problems",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"problems"
+					]
+				},
+				"description": "for submitting a problem"
+			},
+			"response": []
+		},
+		{
+			"name": "index",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete a post",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "5c6005ac9ba7ea0f470d5b8d",
+					"host": [
+						"5c6005ac9ba7ea0f470d5b8d"
+					]
+				},
+				"description": "delete a post"
+			},
+			"response": []
+		}
+	]
+}

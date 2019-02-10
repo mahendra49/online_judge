@@ -6,7 +6,11 @@ var problemSchema = new mongoose.Schema({
 	problemDetails : {
 		owner 	    : String,
 		problemName : String,
-		problemId 	: String
+		problemId 	: String,
+		created 	: {
+			type	: Date,
+			default : Date.now
+		}
 	},
 
 	//actual problem statement
