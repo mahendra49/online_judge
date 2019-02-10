@@ -1,6 +1,6 @@
 const express 	=	require("express")
-,	  router 	=	express.Router({mergeParams:true});	 
-
+,	  router 	=	express.Router({mergeParams:true})	 
+,     User      =   require("../models/user");
 
 
 router.get("/",(req,res)=>{
@@ -8,11 +8,16 @@ router.get("/",(req,res)=>{
 });
 
 router.get("/login", (req,res)=>{
-	res.send("login page");
+	console.log("login page");
 });
 
 router.post("/login" , (req,res)=>{
-	res.send("success login");
+	
+	const usrDetails  =  {
+		user:req.body.user,
+		password:req.body.password
+	}
+	res.send("ok done");
 });
 
 router.get("/register", (req,res)=>{
@@ -20,7 +25,19 @@ router.get("/register", (req,res)=>{
 });
 
 router.post("/register", (req,res)=>{
-	res.send("succes register");
+	
+	const usrDetails  =  {
+		user:req.body.user,
+		password:req.body.password,
+		email:req.body.email
+	}
+	User.create(usrDetails , (err,user)=>{
+		if(err)
+			console.log(err);
+		res.send("user stored");
+	});
+
+	console.log(usrDetails);
 });
 
 module.exports  = router;
