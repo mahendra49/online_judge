@@ -3,6 +3,17 @@ const express 	=	require("express")
 ,     Problem 	=   require("../models/problem"); 
 
 
+/*  
+	RESTful API
+	```````````
+	index,
+	new,
+  	create,
+	show,
+	edit,
+	put,
+	delete
+ */
 //show all problems statements
 router.get("/" ,(req,res)=>{
 	Problem.find({},{"problemDetails.problemName":1,"problemDetails.problemId":1}).sort('-created').limit(20).exec((err,problems)=>{
@@ -32,6 +43,8 @@ router.post("/", (req,res)=>{
 
 });
 
+
+//show the problem in detail
 router.get("/:id",(req,res)=>{
 	Problem.findById(req.params.id, (err,problem)=>{
 		if(err){

@@ -1,10 +1,10 @@
-const express 		= 		require("express")
-,	  app 			=       express()
-,	  bodyparser  	= 		require("body-parser")
-,	  mongoose 		=		require("mongoose")	
-,     Problems      = 		require("./routes/problems")
-,	  Index  		=		require("./routes/index");
-
+const express 			= 		require("express")
+,	  app 				=       express()
+,	  bodyparser  		= 		require("body-parser")
+,	  mongoose 			=		require("mongoose")	
+,     Problems      	= 		require("./routes/problems")
+,	  Index  			=		require("./routes/index")
+,	  SubmitSolution	=		require("./routes/submitSolution");
 
 //connect to database..mongodb in this case
 mongoose.connect("mongodb://localhost/online_judge", {useNewUrlParser:true});
@@ -30,9 +30,13 @@ app.use("/", Index);
 //route all the url having "/problems/.."
 app.use("/problems", Problems);
 
+//all submitted solutions will be running here
+app.use("/submit", SubmitSolution);
 
 app.listen(process.env.PORT, process.env.IP ,()=>{
 	console.log("server running on "+ process.env.IP + ":"+process.env.PORT);
 });
+
+
 
 
