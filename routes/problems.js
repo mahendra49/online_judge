@@ -1,7 +1,8 @@
-const express 	=	require("express")
-,	  router 	=	express.Router({mergeParams:true})
-,     Problem 	=   require("../models/problem"); 
-
+const express 						=	require("express")
+,	  router 						=	express.Router({mergeParams:true})
+,     Problem 						=   require("../models/problem")
+,     UsrOwnedProblemStatements		=   require("../models/usr-list-of-problems")
+,	  User							=   require("../models/user");
 
 /*  
 	RESTful API
@@ -26,24 +27,56 @@ router.get("/new", (req,res)=>{
 	res.send("create new problems");
 });
 
-//post a new probelem
+//post a new probelem --- some work pending
 router.post("/", (req,res)=>{
 	
 	const problem = makeProblemStatement(req.body);
 
- 	Problem.create(problem, (err,problem)=>{
- 		if(err){
- 			console.log(err);
- 			res.send("error in uploading problem..please try again");
- 		}
- 		else{
- 			res.send("problem updated successfully");
- 		}
- 	});
-
+	//find the user first and update then problem statement and then usr-list-of-problems
+	User.findOne({user:"mahendra"},(err,user)=>{
+		if(err){
+			console.log("user does not exits");
+			res.send("user does not exits");
+		}
+		else{
+			Problem.create(problem, (err, problem) => {
+				if (err) {
+					console.log(err);
+					res.send("error in uploading problem..please try again");
+				}
+				else {
+					//res.send("problem updated successfully");
+					UsrOwnedProblemStatements.findOne({owner:"mahendra"}, (err,usrOwnedProblemStatements)=>{
+						console.log(usrOwnedProblemStatements);
+						if(err){
+							console.log("cannot update useownedproblem statement");
+							res.send("some error in useownedproblem statement updation");
+						}
+						if(!usrOwnedProblemStatements){
+							//create a new user
+							usrOwnedProblemStatementsPromise = createANewUserForUsrOwnedProblemStatement("mahendra");
+							usrOwnedProblemStatementsPromise.then((usrOwnedProblemStatementsValue)=>{
+								usrOwnedProblemStatements = usrOwnedProblemStatementsValue;
+								usrOwnedProblemStatements.problemsOwned.push(problem)
+								usrOwnedProblemStatements.save();
+								console.log(usrOwnedProblemStatements)
+								res.send("all ok");
+							});
+						}
+						else{
+							usrOwnedProblemStatements.problemsOwned.push(problem);
+							usrOwnedProblemStatements.save();
+							res.send("all ok no need to create a usrOwnedproblemStatement");
+						}
+							
+					});
+				}
+			});
+		}
+	});
 });
-
-
+						
+	
 //show the problem in detail
 router.get("/:id",(req,res)=>{
 	Problem.findById(req.params.id, (err,problem)=>{
@@ -130,14 +163,46 @@ function makeProblemStatement(tmpProblem) {
 			input  : tmpProblem.sampleinput,
 			output : tmpProblem.sampleoutput
 		}
- 	}
+	}
+	
+	//now get all the actual test cases
+	const testCases = [];
+	for (let i = 0; i < tmpProblem.testinput.length ; i++){
+		testCases.push({
+			input  : tmpProblem.testinput[i],
+			output : tmpProblem.testoutput[i]
+		});
+	}
+
+	// Add another field to problemStatement and pass testCases as key
+	problemStatement.testCases = testCases;
+
 	// A complete problem object..we have store this in DB
  	const problem = {
  		problemDetails   : problemDetails,
- 		problemStatement : problemStatement 
- 	}
+		problemStatement : problemStatement,
+	}
+	 
+	//console.log(tmpProblem.testinput);
+
 
  	return problem;
+}
+
+
+async function createANewUserForUsrOwnedProblemStatement(name) {
+	
+	UsrOwnedProblemStatements.create({owner:name} , (err,usrOwnedProblemStatements)=>{
+		if(err){
+			console.log("error in creating one");
+		}
+		else{
+			console.log(usrOwnedProblemStatements);
+			return usrOwnedProblemStatements;
+			
+		}
+	});
+
 }
 
 module.exports = router;

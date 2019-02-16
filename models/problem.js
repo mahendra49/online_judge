@@ -21,7 +21,13 @@ var problemSchema = new mongoose.Schema({
 		sampletestcase : {          // A sample test case with input and output   
 			input  : String,
 			output : String
-		}
+		},
+		testCases:[
+			{
+				input  :String,
+				output :String
+			}
+		]
  	} 
 
 });

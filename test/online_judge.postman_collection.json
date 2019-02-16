@@ -163,22 +163,42 @@
 						},
 						{
 							"key": "sampleinput",
-							"value": "25256678 5 66 5 6 56 5 6",
+							"value": "mahendra \n5\n1 2 3 4 5",
 							"type": "text"
 						},
 						{
 							"key": "sampleoutput",
-							"value": "2 2 5 5 5 6 6 56 6",
+							"value": "mahendra\n1 2 3 4 5",
+							"type": "text"
+						},
+						{
+							"key": "testinput[0]",
+							"value": "mahendra",
+							"type": "text"
+						},
+						{
+							"key": "testoutput[0]",
+							"value": "suthar",
+							"type": "text"
+						},
+						{
+							"key": "testinput[1]",
+							"value": "holla",
+							"type": "text"
+						},
+						{
+							"key": "testoutput[2]",
+							"value": "dolla",
 							"type": "text"
 						}
 					]
 				},
 				"url": {
-					"raw": "localhost:3000/problems",
+					"raw": "localhost:5000/problems",
 					"host": [
 						"localhost"
 					],
-					"port": "3000",
+					"port": "5000",
 					"path": [
 						"problems"
 					]
@@ -197,7 +217,14 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": ""
+					"raw": "localhost:3000/problems",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"problems"
+					]
 				}
 			},
 			"response": []
@@ -205,19 +232,63 @@
 		{
 			"name": "delete a post",
 			"request": {
-				"method": "GET",
+				"method": "DELETE",
 				"header": [],
 				"body": {
 					"mode": "raw",
 					"raw": ""
 				},
 				"url": {
-					"raw": "5c6005ac9ba7ea0f470d5b8d",
+					"raw": "localhost:3000/problems/5c6027aed4e84125aae785dc",
 					"host": [
-						"5c6005ac9ba7ea0f470d5b8d"
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"problems",
+						"5c6027aed4e84125aae785dc"
 					]
 				},
 				"description": "delete a post"
+			},
+			"response": []
+		},
+		{
+			"name": "submitsolution",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "solution",
+							"value": "#include<iostream>\nusing namespace std;\nint  main(){\nint a[]={1};\ncout<<a[100];\ncout<<\"holla\"<<endl;\nreturn 0;\n}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/submit/5c66d5cca6c51029c95480c9",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"submit",
+						"5c66d5cca6c51029c95480c9"
+					]
+				}
 			},
 			"response": []
 		}

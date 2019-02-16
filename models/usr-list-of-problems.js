@@ -3,14 +3,15 @@ just keeping things simple
 all the problems statements a user owns are stored here
 */
 
-const mongoose = require("mongoose");
+const mongoose 	= require("mongoose");
+		
 
 var OwnerofProblems = new mongoose.Schema({
 
 	//owner is a "User" from user.js
 	owner: {
-		type : mongoose.Schema.Types.ObjectId,
-		ref  : "User"
+		type   :String,
+		
 	},
 
 	//list of problems owned
