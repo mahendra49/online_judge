@@ -3,17 +3,19 @@ const express 	=	require("express")
 ,     User      =   require("../models/user")
 ,	    session   =   require('express-session')
 ,     bcrypt	  =   require('bcrypt')
-,	    _         =   require('lodash');
+,	    _         =   require('lodash')
+,     middleware=   require('../middleware/index');
 
 router.get("/",(req,res)=>{
-	res.send("welcome page");
+  console.log(req.session.user);
+  res.render("home",{currentUser:req.session.user});
 });
 
-router.get("/login", (req,res)=>{
+router.get("/login", middleware.isLogged ,(req,res)=>{
 	res.render("login");
 });
 
-router.post("/login", async (req,res)=>{
+router.post("/login", middleware.isLogged ,async (req,res)=>{
   let user = await User.findOne({username:req.body.username})
   
   if(!user)
@@ -27,15 +29,15 @@ router.post("/login", async (req,res)=>{
   
   req.session.user = payload;
 
-  res.status(200).send({ auth: true, ...payload});
+  res.redirect('/');
   
 });
 
-router.get("/register", (req,res)=>{
+router.get("/register", middleware.isLogged,(req,res)=>{
 	res.render("register");
 });
 
-router.post("/register", (req,res)=>{
+router.post("/register", middleware.isLogged ,(req,res)=>{
   const hashedPassword = bcrypt.hashSync(req.body.password, 8);
  
   User.create({
@@ -51,9 +53,15 @@ router.post("/register", (req,res)=>{
 
       const payload =  _.pick(user , ['_id','username','email'])
       req.session.user = payload;
-      res.status(200).send({ auth: true, ...payload});
-  
+      res.redirect('/');
     });
 });;
+
+router.get('/logout',(req,res)=>{
+  req.session.destroy(function(){
+      console.log("user logged out.")
+      res.redirect('/login');
+  });
+});
 
 module.exports  = router;

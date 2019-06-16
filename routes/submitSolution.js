@@ -4,8 +4,8 @@ const express  =  require("express")
 ,     fs       =  require("fs")
 ,     cp       =  require("child_process")
 ,     path     =  require("path")
-,     Result   =  require("../models/results");
-
+,     Result   =  require("../models/results")
+,     middleware = require('../middleware/index');
 
 //show ide
 router.get("/ide" ,(req,res)=>{
@@ -16,13 +16,13 @@ router.get('/ide/:id',(req,res)=>{
     res.render('ide',{id:req.params.id});
 });
 
-router.post('/',(req,res)=>{
+router.post('/', middleware.isLoggedIn, (req,res)=>{
     runWithOutProblem(req,res);
 });
 
-router.post('/:id',(req,res)=>{
+router.post('/:id',middleware.isLoggedIn ,(req,res)=>{
     runWithProblem(req,res);
-})
+});
 
 function runWithOutProblem (req,res){
     const tmpfile = Date.now();
@@ -75,7 +75,7 @@ function runWithProblem(req,res){
     //console.log(solutionofUser);
 
     //generate a file unique file name..i'm taking date+username;
-    const tmpfile  = Date.now()+"mahendra";
+    const tmpfile  = Date.now()+req.session.user.username;
 
 
     Problem.findById(problemId , (err,problem)=>{
@@ -88,6 +88,7 @@ function runWithProblem(req,res){
                 if (err) {
                     console.log("error in writing to file in solution submtting");
                     console.log(err);
+                    res.send('error')
                 }
                 else {
                     const compileGCC = cp.spawnSync("g++", ["./tmpfiles/"+tmpfile+".cpp", "-o", "./tmpfiles/"+tmpfile+".out"]); //the array is the arguments
@@ -98,14 +99,27 @@ function runWithProblem(req,res){
                         removeFile("./tmpfiles/" + tmpfile + ".cpp");
                     }
                     else{
-                        //console.log(problem.problemStatement.sampletestcase.input);
-                        const runGCC = cp.spawnSync("./tmpfiles/" + tmpfile + ".out", { 
-                            input   : problem.problemStatement.sampletestcase.input,
-                            timeout : 2000
-                        });
-                        console.log(runGCC.stdout.toString());
-                        console.log(problem.problemStatement.sampletestcase.output);
+
+                        const tc = problem.problemStatement.testCases;
+                        let result=true;
                         
+                        for(let i=0;i<tc.length;i++){
+                            //console.log(problem.problemStatement.sampletestcase.input);
+                            const runGCC = cp.spawnSync("./tmpfiles/" + tmpfile + ".out", { 
+                                input   : tc[i].input,
+                                timeout : 2000
+                            });
+                            console.log(runGCC.stdout.toString());
+                            if (runGCC.signal == "SIGTERM"){
+                                res.send({stdout:"Segmentation fault"});
+                            }
+                            else if (runGCC.signal == "SIGSEGV"){
+                                res.send("Segmentation fault");
+                            }
+                            if(runGCC.stdout.toString().trim() != tc[i].output.trim()){
+                                result=false;
+                            }
+                        }
                         /*
                         //testing purpose
                         //var ss = fs.writeFileSync("../mahendra.txt", runGCC.stdout.toString().replace(/[^\S\r\n]+$/gm, ""));
@@ -114,26 +128,19 @@ function runWithProblem(req,res){
                         */
                        
                         //result of submission 1 - passes , 0 - failed 
-                        let result;
-                       
+                        
                         //test for signals ie..for Timeout , Segmentation fault
-                        if (runGCC.signal == "SIGTERM"){
-                            res.send("timout error");
-                            
-                        }
-                        else if (runGCC.signal == "SIGSEGV"){
-                            res.send("SIGSEGV fault");
-                        }
+                        
                         //match the actual output with user output
-                        else if (runGCC.stdout.toString().trim() == problem.problemStatement.sampletestcase.output.replace(/[^\S\r\n]+$/gm, "")){
+                        if (result){
                             res.status(200).send({stdout:"tests passed"});
                             result = 1;
-                            updateResult(problem , result);
+                            updateResult(problem , result , req);
                         }
                         else{
                             res.send({stdout:"tests failed"});
                             result = 0;
-                            updateResult(problem , result);
+                            updateResult(problem , result,req);
                         }
 
                         //remove ".cpp" and ".out" generated files for C++
@@ -164,10 +171,10 @@ function removeFile(fileName) {
     problem  - the problem 
     result   - result of the submission
 */
-function updateResult(problem , result) {
+function updateResult(problem , result,req) {
     
     const resultOfSubmission = {
-        user        : "mahendra",
+        user        : req.session.user.username,
         problemId   : problem._id,
         result      : result
     };

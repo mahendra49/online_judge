@@ -2,7 +2,8 @@ const express 						=	require("express")
 ,	  router 						=	express.Router({mergeParams:true})
 ,     Problem 						=   require("../models/problem")
 ,     UsrOwnedProblemStatements		=   require("../models/usr-list-of-problems")
-,	  User							=   require("../models/user");
+,	  User							=   require("../models/user")
+,     middleware					=   require("../middleware/index");
 
 /*  
 	RESTful API
@@ -16,7 +17,7 @@ const express 						=	require("express")
 	delete
  */
 //show all problems statements
-router.get("/" ,(req,res)=>{
+router.get("/" , (req,res)=>{
 
 	Problem.find({},{"problemDetails.problemName":1,"problemDetails.problemId":1}).sort('-created').limit(20).exec((err,problems)=>{
 		//console.log(problems);
@@ -30,7 +31,7 @@ router.get("/new", (req,res)=>{
 });
 
 //post a new probelem --- some work pending
-router.post("/", (req,res)=>{
+router.post("/", middleware.isLoggedIn ,(req,res)=>{
 	
 	const problem = makeProblemStatement(req.body);
 
@@ -68,7 +69,7 @@ router.post("/", (req,res)=>{
 						else{
 							usrOwnedProblemStatements.problemsOwned.push(problem);
 							usrOwnedProblemStatements.save();
-							res.send("all ok no need to create a usrOwnedproblemStatement");
+							res.redirect("/problems");
 						}
 							
 					});
@@ -94,7 +95,7 @@ router.get("/:id",(req,res)=>{
 
 
 //req for - edit a problem
-router.get("/:id/edit", (req,res)=>{
+router.get("/:id/edit", middleware.isLoggedIn ,(req,res)=>{
 	Problem.findById(req.params.id , (err,problem)=>{
 		if(err){
 			console.log(err);
@@ -113,7 +114,7 @@ router.get("/:id/edit", (req,res)=>{
 
 
 //put a edit -- find by id and update the problem
-router.put("/:id", (req,res)=>{
+router.put("/:id", middleware.isLoggedIn ,(req,res)=>{
 
 	const problem = makeProblemStatement(req.body);
 
@@ -133,7 +134,7 @@ router.put("/:id", (req,res)=>{
 });
 
 //delete a problem
-router.delete("/:id" , (req,res)=>{
+router.delete("/:id" , middleware.isLoggedIn ,(req,res)=>{
 	Problem.findById(req.params.id, (err,problem)=>{
 		if(err){
 			console.log("err in remove problem");

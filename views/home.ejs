@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>fapers</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>     
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="./css/styles.css">
+  <style type="text/css">
+    body { 
+  background: url("https://cdn.allwallpaper.in/wallpapers/1920x1080/7764/code-digital-art-computer-technology-language-science-developer-1920x1080-wallpaper.jpg") no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: ;
+  color: white;
+}
+
+.center{
+  height: 20%;
+  width: 30%;
+  padding: 20px;
+  text-align: center;
+  margin: auto;
+  margin-top: 15%;
+  margin-left: 30%;
+  color: #fff;
+  font-family: 'centry Gothic',sans-serif;
+}
+  </style>
+</head>
+
+
+<body>
+
+<div class="fluid">
+  
+   <nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/">fapers</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class=""><a href="/">Home</a></li>
+      <li><a href="/problems">Find</a></li>
+      <% if(currentUser){ %>
+            <li><a href="/problems/new"><span class="glyphicon glyphicon-user"></span> Submit Problem</a></li>
+               
+        <% }  %>
+        
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+        <% if(!currentUser){ %>
+            <li><a href="/register"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+            <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+               
+        <% } else { %>
+            <li><a href="/problems"><span class="glyphicon glyphicon-user"></span>Hello, <%= currentUser.username%> </a></li>
+            <li><a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+            
+        <% } %>
+    </ul>
+  </div>
+</nav> 
+</script>
+<script type="text/javascript" src="./js/active.js"></script>
+  
+  <div class="container">
+   <div class="row">
+      <div  class="col-sm-4 center .col-12">
+         <h2><span class="element"><strong>Code.</strong></span></h2>
+         <a href="/problems" class="btn btn-primary btn-lg active find-button" role="button" aria-pressed="true">Problems</a>
+     </div>
+   </div>
+  </div>
+
+</div>
+
+<script>
+        document.addEventListener('DOMContentLoaded', function(){
+          Typed.new('.element', {
+            strings: ["<strong>Save paper!</strong>", "<strong>Find Notes.</strong>", "<strong>Find Text Books.</strong>"],
+            typeSpeed: 0
+          });
+      });
+</script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>     
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+ 
+ 
+  <script type="text/javascript" src="./js/typed.js"></script>
+  <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css"></script>
+          
+  
+
+  </body>
+</html>
