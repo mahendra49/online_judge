@@ -11,64 +11,60 @@
     <title>Hello, world!</title>
   </head>
   <body>
+    <div class="container-fluid">
+      
     
-    <form>
+    <form class='problem-form' method="POST" action="/problems/">
   <div class="form-row">
     <div class="form-group col-md-6">
       <label for="inputEmail4">Owner</label>
-      <input type="text" name="owner" class="form-control" placeholder="Enter Owner of Problem">
+      <input required type="text" name="owner" class="form-control" placeholder="Enter Owner of Problem">
     </div>
     <div class="form-group col-md-6">
       <label for="inputPassword4">ProblemName</label>
-      <input type="password" name="problemName" class="form-control" id="inputPassword4" placeholder="ProblemName">
+      <input required type="password" name="problemName" class="form-control" id="inputPassword4" placeholder="ProblemName">
     </div>
   </div>
+   <div class="form-group">
+    <label for="comment">Statement</label>
+    <textarea required name="statement" class="form-control" rows="5" id="comment"></textarea>
+   </div> 
   <div class="form-group">
-    <label for="inputAddress">Statement</label>
-    <input type="text" class="form-control"  placeholder="Enter pronlem Statement">
-  </div>
-  <div class="form-group">
-    <label for="inputAddress2">Input format</label>
-    <input type="text" name="input" class="form-control" placeholder="sample input">
-  </div>
-  <div class="form-group">
-    <label for="inputAddress2">Output format</label>
-    <input type="text" name="output" class="form-control" placeholder="sample Output">
-  </div>
-  
-  <div class="form-row">
-    <div class="form-group col-md-6">
-      <label for="inputCity">City</label>
-      <input type="text" class="form-control" id="inputCity">
-    </div>
-    <div class="form-group col-md-4">
-      <label for="inputState">State</label>
-      <select id="inputState" class="form-control">
-        <option selected>Choose...</option>
-        <option>...</option>
-      </select>
-    </div>
-    <div class="form-group col-md-2">
-      <label for="inputZip">Zip</label>
-      <input type="text" class="form-control" id="inputZip">
-    </div>
-  </div>
-  <div class="form-group">
-    <div class="form-check">
-      <input class="form-check-input" type="checkbox" id="gridCheck">
-      <label class="form-check-label" for="gridCheck">
-        Check me out
-      </label>
-    </div>
-  </div>
+    <label for="comment">sampleinput</label>
+    <textarea required name="sampleinput" class="form-control" rows="5" id="comment"></textarea>
+   </div> 
+   <div class="form-group">
+    <label for="comment">sampleoutput</label>
+    <textarea name="sampleoutput" required class="form-control" rows="5" id="comment"></textarea>
+   </div> 
+    <button type="button" class="testcases btn btn-secondary">Add Test cases</button>
   <button type="submit" class="btn btn-primary">Sign in</button>
 </form>
-
+  </div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    
+    <script type="text/javascript">
+        var tcNumber = 0;
+        $('.testcases').on('click',()=>{
+          //'problem-form'
+          $('.testcases').before(`<div class="form-group">
+    <label for="comment">Test INput ${tcNumber}</label>
+    <textarea required name="testinput[${tcNumber}]" class="form-control" rows="5" id="comment"></textarea>
+   </div> 
+   <div class="form-group">
+    <label for="comment">sampleoutput</label>
+    <textarea name="testinput[${tcNumber}]" required class="form-control" rows="5" id="comment"></textarea>
+   </div> 
+  `)
+        });
+
+    </script>
+
+
   </body>
 </html>
