@@ -22,7 +22,7 @@
     </div>
     <div class="form-group col-md-6">
       <label for="inputPassword4">ProblemName</label>
-      <input required type="password" name="problemName" class="form-control" id="inputPassword4" placeholder="ProblemName">
+      <input required type="text" name="problemName" class="form-control" id="inputPassword4" placeholder="ProblemName">
     </div>
   </div>
    <div class="form-group">
@@ -38,7 +38,7 @@
     <textarea name="sampleoutput" required class="form-control" rows="5" id="comment"></textarea>
    </div> 
     <button type="button" class="testcases btn btn-secondary">Add Test cases</button>
-  <button type="submit" class="btn btn-primary">Sign in</button>
+  <button type="submit" class="btn btn-primary">Submit</button>
 </form>
   </div>
 
@@ -53,15 +53,17 @@
         $('.testcases').on('click',()=>{
           //'problem-form'
           $('.testcases').before(`<div class="form-group">
-    <label for="comment">Test INput ${tcNumber}</label>
+    <label for="comment">Test Input ${tcNumber}</label>
     <textarea required name="testinput[${tcNumber}]" class="form-control" rows="5" id="comment"></textarea>
    </div> 
    <div class="form-group">
-    <label for="comment">sampleoutput</label>
-    <textarea name="testinput[${tcNumber}]" required class="form-control" rows="5" id="comment"></textarea>
+    <label for="comment">Test Output ${tcNumber}</label>
+    <textarea name="testoutput[${tcNumber}]" required class="form-control" rows="5" id="comment"></textarea>
    </div> 
   `)
+        tcNumber++;
         });
+        
 
     </script>
 

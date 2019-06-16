@@ -83,11 +83,11 @@ router.post("/", (req,res)=>{
 router.get("/:id",(req,res)=>{
 	Problem.findById(req.params.id, (err,problem)=>{
 		if(err){
-			//redirect here
 			console.log("error in opening a problem with given id");
+			res.status(400).send("error in getting problem");
 		}
 		else{
-			res.send(problem);
+			res.send(problem,{problems:problem});
 		}
 	});
 });
@@ -150,6 +150,7 @@ router.delete("/:id" , (req,res)=>{
 });
 
 function makeProblemStatement(tmpProblem) {
+	console.log(tmpProblem);
 	//meta data for problem
 	const problemDetails =  {
 		owner 	    : tmpProblem.owner || "",
@@ -169,12 +170,13 @@ function makeProblemStatement(tmpProblem) {
 	
 	//now get all the actual test cases
 	const testCases = [];
-	for (let i = 0; i < tmpProblem.testinput.length ; i++){
-		testCases.push({
-			input  : tmpProblem.testinput[i],
-			output : tmpProblem.testoutput[i]
-		});
-	}
+	if(tmpProblem.testinput)
+		for (let i = 0; i < tmpProblem.testinput.length ; i++){
+			testCases.push({
+				input  : tmpProblem.testinput[i],
+				output : tmpProblem.testoutput[i]
+			});
+		}
 
 	// Add another field to problemStatement and pass testCases as key
 	problemStatement.testCases = testCases;
