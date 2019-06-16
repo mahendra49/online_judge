@@ -23,8 +23,7 @@
     <%problems.forEach(function(problem){%>
       <tr>
         <th scope="row">1</th>
-        <%console.log(problem.problemDetails)%>
-        <td><a href="/submit/ide/<%=problem._id%>"><%=problem.problemDetails.problemName%></a></td>
+        <td><a href="/problems/<%=problem._id%>"><%=problem.problemDetails.problemName%></a></td>
       </tr>
     <%})%>
   </tbody>

@@ -87,7 +87,7 @@ router.get("/:id",(req,res)=>{
 			res.status(400).send("error in getting problem");
 		}
 		else{
-			res.send(problem,{problems:problem});
+			res.render('showProblem',{problem:problem});
 		}
 	});
 });
