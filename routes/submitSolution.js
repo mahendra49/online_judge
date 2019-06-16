@@ -6,9 +6,64 @@ const express  =  require("express")
 ,     path     =  require("path")
 ,     Result   =  require("../models/results");
 
-//submitted solution are handled here
 
-router.post("/:id" ,(req,res)=>{
+//show ide
+router.get("/ide" ,(req,res)=>{
+    res.render('ide');
+});
+
+router.get('/ide/:id',(req,res)=>{
+    res.render('ide',{id:req.params.id});
+});
+
+router.post('/',(req,res)=>{
+    runWithOutProblem(req,res);
+});
+
+router.post('/:id',(req,res)=>{
+    runWithProblem(req,res);
+})
+
+function runWithOutProblem (req,res){
+    const tmpfile = Date.now();
+    console.log(req.body);
+    fs.writeFile(__dirname + "/.." + "/tmpfiles/" +  tmpfile + ".cpp" ,req.body.source_code ,(err)=>{
+        if(err)
+            return res.status(400).send("error");
+        const compileGCC = cp.spawnSync("g++", ["./tmpfiles/"+tmpfile+".cpp", "-o", "./tmpfiles/"+tmpfile+".out"]); //the array is the arguments
+        console.log("input is : ");
+        if(compileGCC.status!=0){
+            console.log(`compile error ${compileGCC.stderr.toString()}`);
+            removeFile("./tmpfiles/" + tmpfile + ".cpp");
+            return res.status(400).send(`compile error ${compileGCC.stderr.toString()}`);
+        }
+        const runGCC = cp.spawnSync("./tmpfiles/" + tmpfile + ".out", { 
+            input   : req.body.stdin,
+            timeout : 2000
+        });
+        console.log(runGCC.stdout.toString());
+        let result;
+                       
+        //test for signals ie..for Timeout , Segmentation fault
+        if (runGCC.signal == "SIGTERM"){
+            res.send("timout error");
+            
+        }
+        else if (runGCC.signal == "SIGSEGV"){
+            res.send("SIGSEGV fault");
+        }
+        
+        res.send({stdout:runGCC.stdout.toString()});
+        //remove ".cpp" and ".out" generated files for C++
+        removeFile("./tmpfiles/" + tmpfile + ".cpp");
+        removeFile("./tmpfiles/" + tmpfile + ".out");           
+    });
+};
+
+
+//submitted solution are handled here
+function runWithProblem(req,res){
+    console.log(req.body);
     
     //find problem by id
     const problemId         = req.params.id;
@@ -29,7 +84,7 @@ router.post("/:id" ,(req,res)=>{
             res.send("falied");
         }
         else{
-            fs.writeFile(__dirname + "/.." + "/tmpfiles/" +  tmpfile + ".cpp", solutionofUser, (err) => {
+            fs.writeFile(__dirname + "/.." + "/tmpfiles/" +  tmpfile + ".cpp", req.body.source_code, (err) => {
                 if (err) {
                     console.log("error in writing to file in solution submtting");
                     console.log(err);
@@ -39,7 +94,7 @@ router.post("/:id" ,(req,res)=>{
                     console.log("input is : ");
                     if(compileGCC.status!=0){
                         //console.log(`compile error ${compileGCC.stderr.toString()}`);
-                        res.send(`compile error ${compileGCC.stderr.toString()}`);
+                        res.send({status:400,stdout:`compile error ${compileGCC.stderr.toString()}`});
                         removeFile("./tmpfiles/" + tmpfile + ".cpp");
                     }
                     else{
@@ -70,13 +125,13 @@ router.post("/:id" ,(req,res)=>{
                             res.send("SIGSEGV fault");
                         }
                         //match the actual output with user output
-                        else if (runGCC.stdout.toString().replace(/[^\S\r\n]+$/gm, "") == problem.problemStatement.sampletestcase.output.replace(/[^\S\r\n]+$/gm, "")){
-                            res.send("test case passes");
+                        else if (runGCC.stdout.toString().trim() == problem.problemStatement.sampletestcase.output.replace(/[^\S\r\n]+$/gm, "")){
+                            res.status(200).send({stdout:"tests passed"});
                             result = 1;
                             updateResult(problem , result);
                         }
                         else{
-                            res.send("test case failed");
+                            res.send({stdout:"tests failed"});
                             result = 0;
                             updateResult(problem , result);
                         }
@@ -91,7 +146,8 @@ router.post("/:id" ,(req,res)=>{
             
         }
     }); 
-});
+};
+
 
 //to remove the file after executing
 function removeFile(fileName) {

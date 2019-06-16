@@ -17,14 +17,16 @@ const express 						=	require("express")
  */
 //show all problems statements
 router.get("/" ,(req,res)=>{
+
 	Problem.find({},{"problemDetails.problemName":1,"problemDetails.problemId":1}).sort('-created').limit(20).exec((err,problems)=>{
-		res.send(problems);
+		//console.log(problems);
+		res.render('showProblems',{problems:problems});
 	});
 });
 
 //create a new problem statement
 router.get("/new", (req,res)=>{
-	res.send("create new problems");
+	res.render("createProblem");
 });
 
 //post a new probelem --- some work pending
@@ -150,9 +152,9 @@ router.delete("/:id" , (req,res)=>{
 function makeProblemStatement(tmpProblem) {
 	//meta data for problem
 	const problemDetails =  {
-		owner 	    : tmpProblem.owner,
-		problemName : tmpProblem.problemName,
-		problemId 	: tmpProblem.problemId
+		owner 	    : tmpProblem.owner || "",
+		problemName : tmpProblem.problemName || "",
+		problemId 	: tmpProblem.problemId || ""
 	}
 
 	const problemStatement = {

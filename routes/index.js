@@ -1,43 +1,59 @@
 const express 	=	require("express")
-,	  router 	=	express.Router({mergeParams:true})	 
-,     User      =   require("../models/user");
-
+,	    router 	  =	express.Router({mergeParams:true})	 
+,     User      =   require("../models/user")
+,	    session   =   require('express-session')
+,     bcrypt	  =   require('bcrypt')
+,	    _         =   require('lodash');
 
 router.get("/",(req,res)=>{
 	res.send("welcome page");
 });
 
 router.get("/login", (req,res)=>{
-	console.log("login page");
+	res.render("login");
 });
 
-router.post("/login" , (req,res)=>{
-	
-	const usrDetails  =  {
-		user:req.body.user,
-		password:req.body.password
-	}
-	res.send("ok done");
+router.post("/login", async (req,res)=>{
+  let user = await User.findOne({username:req.body.username})
+  
+  if(!user)
+    return res.status(400).send({ auth: false, message:'incorrect username or password' });
+  
+  const validPassword = await bcrypt.compare(req.body.password , user.password);
+  
+  if (!validPassword) return res.status(400).send({ auth: false, message:'incorrect username or password' });
+  
+  const payload =  _.pick(user , ['_id','username','email'])
+  
+  req.session.user = payload;
+
+  res.status(200).send({ auth: true, ...payload});
+  
 });
 
 router.get("/register", (req,res)=>{
-	res.send("form for register");
+	res.render("register");
 });
 
 router.post("/register", (req,res)=>{
-	
-	const usrDetails  =  {
-		user:req.body.user,
-		password:req.body.password,
-		email:req.body.email
-	}
-	User.create(usrDetails , (err,user)=>{
-		if(err)
-			console.log(err);
-		res.send("user stored");
-	});
+  const hashedPassword = bcrypt.hashSync(req.body.password, 8);
+ 
+  User.create({
+      username : req.body.username,
+      email : req.body.email,
+      password : hashedPassword
+    },
+    function (err, user) {
 
-	console.log(usrDetails);
-});
+      if (err){
+        return res.status(400).send({error:true , message:'username or email already exists'})
+      }
+
+      const payload =  _.pick(user , ['_id','username','email'])
+      req.session.user = payload;
+      res.status(200).send({ auth: true, ...payload});
+  
+    });
+});;
 
 module.exports  = router;
