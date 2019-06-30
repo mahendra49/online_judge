@@ -62,7 +62,7 @@ router.post("/", middleware.isLoggedIn ,(req,res)=>{
 								usrOwnedProblemStatements = usrOwnedProblemStatementsValue;
 								usrOwnedProblemStatements.problemsOwned.push(problem)
 								usrOwnedProblemStatements.save();
-								console.log(usrOwnedProblemStatements)
+								//console.log(usrOwnedProblemStatements)
 								res.send("all ok");
 							});
 						}
@@ -84,7 +84,7 @@ router.post("/", middleware.isLoggedIn ,(req,res)=>{
 router.get("/:id",(req,res)=>{
 	Problem.findById(req.params.id, (err,problem)=>{
 		if(err){
-			console.log("error in opening a problem with given id");
+			//console.log("error in opening a problem with given id");
 			res.status(400).send("error in getting problem");
 		}
 		else{
@@ -109,7 +109,6 @@ router.get("/:id/edit", middleware.isLoggedIn ,(req,res)=>{
 		}
 
 	});
-	res.send("edit problem statment");
 });
 
 

@@ -4,7 +4,10 @@ const express 			= 		require("express")
 ,	  mongoose 			=		require("mongoose")	
 ,     Problems      	= 		require("./routes/problems")
 ,	  Index  			=		require("./routes/index")
-,	  SubmitSolution	=		require("./routes/submitSolution");
+,	  SubmitSolution	=		require("./routes/submitSolution")
+,     Result            =  		require("./models/results");
+
+
 
 //connect to database..mongodb in this case
 mongoose.connect("mongodb://localhost/online_judge", {useNewUrlParser:true});
@@ -29,6 +32,30 @@ app.use("/", Index);
 
 //route all the url having "/problems/.."
 app.use("/problems", Problems);
+
+app.get('/results',(req,res)=>{
+	Result.find({},(err,results)=>{
+		const nameScore = {};
+		
+		results.forEach((result)=>{
+			console.log(result);
+			if(nameScore[result.user]){
+				nameScore.user++;
+			}else{
+				nameScore[result.user] = 1;
+			}
+		});
+
+		let tmpresult = Object.keys(nameScore).map(function(key) {
+  			console.log(key);
+  			return {key:key, score:nameScore[key] }
+		});
+		tmpresult.sort(function(a, b) {
+   		 	return a.score - b.score;
+		});
+		res.render('scores', {results:tmpresult});
+	})
+});
 
 //all submitted solutions will be running here
 app.use("/submit", SubmitSolution);

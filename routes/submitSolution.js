@@ -86,8 +86,6 @@ function runWithProblem(req,res){
         else{
             fs.writeFile(__dirname + "/.." + "/tmpfiles/" +  tmpfile + ".cpp", req.body.source_code, (err) => {
                 if (err) {
-                    console.log("error in writing to file in solution submtting");
-                    console.log(err);
                     res.send('error')
                 }
                 else {
@@ -102,14 +100,14 @@ function runWithProblem(req,res){
 
                         const tc = problem.problemStatement.testCases;
                         let result=true;
-                        
+                        console.log(tc);
                         for(let i=0;i<tc.length;i++){
                             //console.log(problem.problemStatement.sampletestcase.input);
                             const runGCC = cp.spawnSync("./tmpfiles/" + tmpfile + ".out", { 
                                 input   : tc[i].input,
                                 timeout : 2000
                             });
-                            console.log(runGCC.stdout.toString());
+                            //console.log(runGCC.stdout.toString());
                             if (runGCC.signal == "SIGTERM"){
                                 res.send({stdout:"Segmentation fault"});
                             }
@@ -140,7 +138,6 @@ function runWithProblem(req,res){
                         else{
                             res.send({stdout:"tests failed"});
                             result = 0;
-                            updateResult(problem , result,req);
                         }
 
                         //remove ".cpp" and ".out" generated files for C++
