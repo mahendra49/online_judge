@@ -8,10 +8,10 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <title>Hello, world!</title>
+    <title>Porblems</title>
   </head>
   <body>
-    
+    <%var item = 1%>
     <table class="table">
   <thead class="thead-dark">
     <tr>
@@ -22,7 +22,7 @@
   <tbody>
     <%problems.forEach(function(problem){%>
       <tr>
-        <th scope="row">1</th>
+        <th scope="row"><%=item++%></th>
         <td><a href="/problems/<%=problem._id%>"><%=problem.problemDetails.problemName%></a></td>
       </tr>
     <%})%>

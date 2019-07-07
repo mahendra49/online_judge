@@ -21,9 +21,10 @@
     </tr>
   </thead>
   <tbody>
+    <%var item =1%>
     <% results.forEach((result)=>{ %>
       <tr>
-        <th scope="row">1</th>
+        <th scope="row"><%=item++%></th>
         <td><%=result.key %></td>
         <td><%=result.score%></td>
       </tr>  
